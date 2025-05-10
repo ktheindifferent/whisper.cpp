@@ -294,6 +294,7 @@ def convert_decoder(hparams, model, quantize=False):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--model", type=str, help="model to convert (e.g. tiny, tiny.en, base, base.en, small, small.en, medium, medium.en, large-v1, large-v2, large-v3, large-v3-turbo)", required=True)
+    parser.add_argument("--path", type=str, help="path to do work on", required=True, default="models")
     parser.add_argument("--encoder-only", type=bool, help="only convert encoder", default=False)
     parser.add_argument("--quantize",     type=bool, help="quantize weights to F16", default=False)
     parser.add_argument("--optimize-ane", type=bool, help="optimize for ANE execution (currently broken)", default=False)
@@ -318,11 +319,11 @@ if __name__ == "__main__":
 
     # Convert encoder
     encoder = convert_encoder(hparams, encoder, quantize=args.quantize)
-    encoder.save(f"models/coreml-encoder-{args.model}.mlpackage")
+    encoder.save(f"{args.path}/coreml-encoder-{args.model}.mlpackage")
 
     if args.encoder_only is False:
         # Convert decoder
         decoder = convert_decoder(hparams, decoder, quantize=args.quantize)
-        decoder.save(f"models/coreml-decoder-{args.model}.mlpackage")
+        decoder.save(f"{args.path}/coreml-decoder-{args.model}.mlpackage")
 
     print("done converting")
